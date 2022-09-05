@@ -18,7 +18,7 @@ def get_db() -> Generator:
 expenses_router=APIRouter()
 
 #  My Endpoints
-@expenses_router.get("",
+@expenses_router.get("/",
     tags=["EXPENSES"],
     # response_model=List[Expense],
     summary="Get all expenses",
@@ -29,7 +29,7 @@ def expenses(db:Session = Depends(get_db)):
     expenses=db.query(Expenses).all()
     return expenses
 
-@expenses_router.get("/{userId}",
+@expenses_router.get("{userId}/",
     tags=["EXPENSES"],
     # response_model=ExpenseInDb,
     summary="Get a single user's expense items basket",
@@ -45,7 +45,7 @@ def oneexpense(userId:int,db:Session = Depends(get_db)):
         raise HTTPException(status_code=404,detail=f"Sorry user {user.first_name} has not yet recorded any expenses") 
     return item
 
-@expenses_router.post("",
+@expenses_router.post("/",
     tags=["EXPENSES"],
     response_model=Dict[str,str],
     summary="Add an expense (NOTE: when using this endpoint, just enter the cost of one single expense even if you have more than one quantity of a given expense item)",
@@ -63,7 +63,7 @@ def addExpense(payload:CreateExpense, db:Session = Depends(get_db)):
     expense:CreateExpense = Expenses(user_id=payload.userId,expense=payload.expense,quantity=payload.quantity,cost=coast)
     db.add(expense)
     db.commit()
-    return {"Message":f"{payload.expense} of quantity {payload.quantity} is now in record"}
+    return {"Message":f"New expense item {payload.expense} of quantity {payload.quantity} is now in record"}
 
 @expenses_router.put("/{expenseId}",
     tags=["EXPENSES"],
@@ -88,7 +88,7 @@ def putExpense(expenseId:int,payload:ExpensePut ,db:Session = Depends(get_db)):
     db.commit()
     return {"Message":f"New Expense name:{payload.expense}, New {payload.expense} quantity:{payload.quantity}, New {payload.expense} cost:{coast}"}
 
-@expenses_router.delete("",
+@expenses_router.delete("/",
     tags=["EXPENSES"],
     response_model=Dict[str,str],
     summary="Remove an expense ite from your expense items basket",

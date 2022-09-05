@@ -13,10 +13,10 @@ class CreateExpense(ExpenseBase):
     pass
 
 class ExpensePut(BaseModel):
+    userID: Optional[int]
     expense: Optional[str]
     quantity: Optional[int]
-    cost: Optional[int]    
-    userID: Optional[int]    
+    cost: Optional[int]            
 
 class Expense(ExpenseBase):
     class Config:
